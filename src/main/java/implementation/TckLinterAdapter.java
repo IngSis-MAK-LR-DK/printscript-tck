@@ -22,10 +22,7 @@ import java.util.Set;
 import interpreter.ErrorHandler;
 import interpreter.PrintScriptLinter;
 
-/**
- * Adapts our style analyzer to the TCK's {@link PrintScriptLinter} contract. This is purely style
- * checking (naming convention, println/readInput argument shape).
- */
+/** Adapts our style analyzer to the TCK's {@link PrintScriptLinter} contract. */
 public final class TckLinterAdapter implements PrintScriptLinter {
 
     @Override

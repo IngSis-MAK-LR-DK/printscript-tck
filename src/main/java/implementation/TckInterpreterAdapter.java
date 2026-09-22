@@ -24,21 +24,10 @@ import interpreter.PrintEmitter;
 import interpreter.PrintScriptInterpreter;
 
 /**
- * Adapts our real interpreter to the TCK's {@link PrintScriptInterpreter} contract. Our own
- * pipeline throws a {@link PrintScriptException} (lexical, syntax or semantic) at whichever stage
- * hits a problem; the TCK instead expects every error reported through {@link ErrorHandler} and
- * {@code execute} to return normally — this is the one place that catches it and reports it
- * instead of letting it escape.
+ * Adapts our real interpreter to the TCK's {@link PrintScriptInterpreter} contract.
  */
 public final class TckInterpreterAdapter implements PrintScriptInterpreter {
 
-    // Some TCK fixtures deliberately run the JVM out of heap while collecting output, so by the
-    // time OutOfMemoryError is thrown, every collected message is still live (reachable) - GC
-    // can't reclaim any of it. Reporting the error back through ErrorHandler needs a bit of fresh
-    // heap of its own (the message String, the ArrayList node...), which can fail with a second,
-    // uncatchable OutOfMemoryError right when we're trying to recover from the first. Reserving
-    // this buffer upfront and dropping it the moment we catch the error frees just enough headroom
-    // for that recovery path - the classic "emergency pool" trick for handling OOM gracefully.
     private static final int OOM_RECOVERY_RESERVE_BYTES = 512 * 1024;
 
     @Override
@@ -63,11 +52,6 @@ public final class TckInterpreterAdapter implements PrintScriptInterpreter {
                 EnvironmentReader environmentReader =
                         name -> Optional.ofNullable(System.getenv(name));
 
-                // The TCK's InputProvider is purely a value source - unlike our own
-                // StdInInputProvider (which prints the prompt itself as part of reading), it never
-                // displays anything. The TCK's fixtures expect the prompt to show up as a print
-                // message regardless, so this adapter does that half explicitly before asking the
-                // provider for the value.
                 edu.austral.ingsis.printscript.interpreter.InputProvider inputProvider =
                         prompt -> {
                             emitter.print(prompt);
@@ -95,7 +79,6 @@ public final class TckInterpreterAdapter implements PrintScriptInterpreter {
         try {
             Files.deleteIfExists(tempFile);
         } catch (IOException ignored) {
-            // best-effort cleanup; deleteOnExit (set when the file was created) is the fallback
         }
     }
 

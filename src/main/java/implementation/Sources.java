@@ -7,14 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-/**
- * Spools an {@link InputStream} to a temp file — every TCK entry point hands us one, but our real
- * pipeline lexes through {@link edu.austral.ingsis.printscript.lexer.FilePositionalSource}, which
- * needs random-access I/O over a real file rather than a one-shot stream. Buffering the whole
- * stream into a {@code String} instead (the obvious alternative) would defeat the point of the
- * large-file tests: a big enough source blows the tiny heap those tests run under, so it has to
- * land on disk, not in a String.
- */
+/** Spools an {@link InputStream} to a temp file */
 final class Sources {
 
     private Sources() {}
