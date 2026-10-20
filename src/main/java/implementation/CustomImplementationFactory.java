@@ -4,20 +4,20 @@ import interpreter.PrintScriptFormatter;
 import interpreter.PrintScriptInterpreter;
 import interpreter.PrintScriptLinter;
 
-public class CustomImplementationFactory implements implementation.PrintScriptFactory {
+public class CustomImplementationFactory implements PrintScriptFactory {
 
     @Override
     public PrintScriptInterpreter interpreter() {
-        return new implementation.TckInterpreterAdapter();
+        return new TckInterpreterAdapter();
     }
 
     @Override
     public PrintScriptFormatter formatter() {
-        return new implementation.TckFormatterAdapter();
+        return new TckFormatterAdapter();
     }
 
     @Override
     public PrintScriptLinter linter() {
-        return new implementation.TckLinterAdapter();
+        return new TckLinterAdapter();
     }
 }
